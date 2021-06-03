@@ -9,10 +9,12 @@ class App extends Component {
       image: '',
       loading: true,
       count: 0,
+      dogName: '',
     }
 
     this.fetchDogs = this.fetchDogs.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
+    this.handlerChanges = this.handlerChanges.bind(this);
   }
 
   fetchDogs() {
@@ -21,14 +23,14 @@ class App extends Component {
       { loading: true },
       () => {fetch(Url)
       .then((response) => response.json())
-      .then(({ message }) => this.setState((state) => ({
+      .then(({ message }) => this.setState(({ count }) => ({
         image: message,
         loading: false,
-        count:  state.count + 1,
+        count:  count + 1,
       })))
       .then(() => localStorage.setItem(this.state.count, this.state.image))
       }
-    )
+    );
   }
 
   shouldComponentUpdate(_nextProps, { image }) {
@@ -44,15 +46,32 @@ class App extends Component {
     this.fetchDogs();
   }
 
+  handlerChanges({ target }) {
+    const { name, value } = target;
+
+    this.setState(() => ({
+      [name]: value,
+    }))
+  }
+
   render() {
-    const { image, loading } = this.state;
+    const { image, loading, dogName, } = this.state;
     
     return (
       <div className="App">
+        <h1>{ dogName }</h1>
        <div className="image-wrapper">
       { loading === true ? "Loading..." : <img src={image} /> }
       </div> 
-      <button onClick={this.handleSearch}>Search</button>
+      <button onClick={ this.handleSearch }>Search</button>
+      <label for="dogName">
+        Defina um nome
+        <input 
+          type="text"
+          name="dogName"
+          onChange={ this.handlerChanges }
+        />
+      </label>
       </div>
     );
   }
