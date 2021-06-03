@@ -8,14 +8,15 @@ class App extends Component {
     this.state = {
       image: '',
       loading: true,
-      count: 0,
       dogName: '',
       dogs: [],
+      localStorage: JSON.parse(localStorage.getItem('dogs')),
     }
 
     this.fetchDogs = this.fetchDogs.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handlerChanges = this.handlerChanges.bind(this);
+    this.saveDogToList = this.saveDogToList.bind(this);
   }
 
   fetchDogs() {
@@ -24,12 +25,10 @@ class App extends Component {
       { loading: true },
       () => {fetch(Url)
       .then((response) => response.json())
-      .then(({ message }) => this.setState(({ count, dogs }) => ({
+      .then(({ message }) => this.setState(({ count }) => ({
         image: message,
         loading: false,
-        count:  count + 1,
       })))
-      .then(() => localStorage.setItem(this.state.count, this.state.image))
       }
     );
   }
@@ -40,11 +39,16 @@ class App extends Component {
 
   handleSearch() {
     this.fetchDogs();
-    window.alert(this.state.image.split('/')[4].split('-').join(' '));
   }
 
   componentDidMount() {
     this.fetchDogs();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.image !== this.state.image) {
+      window.alert(this.state.image.split('/')[4].split('-').join(' '));
+    }
   }
 
   handlerChanges({ target }) {
@@ -55,6 +59,16 @@ class App extends Component {
     }))
   }
 
+  saveDogToList() {
+    const { dogName, image } = this.state;
+
+    this.setState((state) => ({
+      dogs: [...state.dogs, ({ dogName, image })]
+    }), () => {
+      localStorage.setItem('dogs', JSON.stringify(this.state.dogs));
+    })
+  }
+
   render() {
     const { image, loading, dogName, } = this.state;
     
@@ -62,17 +76,31 @@ class App extends Component {
       <div className="App">
         <h1>{ dogName }</h1>
        <div className="image-wrapper">
-      { loading === true ? "Loading..." : <img src={image} /> }
+      { loading === true ? "Loading..." : <img src={image} alt="random dog"/> }
       </div> 
-      <button onClick={ this.handleSearch }>Search</button>
-      <label for="dogName">
-        Defina um nome
-        <input 
-          type="text"
-          name="dogName"
-          onChange={ this.handlerChanges }
-        />
-      </label>
+      <button 
+        onClick={ this.handleSearch }
+      > 
+        Change Dog
+      </button>
+      <button 
+        type="button" 
+        onClick={ this.saveDogToList }
+      >
+        Save dog
+      </button>
+      <form>
+        <label htmlFor="dogName">
+          Defina um nome
+          <input 
+            type="text"
+            name="dogName"
+            onChange={ this.handlerChanges }
+          />
+        </label>
+        <label for="submit">
+        </label>
+      </form>
       </div>
     );
   }

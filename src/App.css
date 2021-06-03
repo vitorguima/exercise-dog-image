@@ -21,6 +21,7 @@ button {
   margin-top: 30px;
   width: 100px;
   height: 30px;
+  margin-bottom: 5px;
 }
 
 .image-wrapper {
@@ -28,4 +29,8 @@ button {
   border: 2px solid grey;
   height: 400px;
   width: 400px;
+}
+
+input {
+  margin-top: 20px;
 }
