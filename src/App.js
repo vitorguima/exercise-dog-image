@@ -6,6 +6,7 @@ class App extends Component {
     super(props)
 
     this.state = {
+      firstLoad: true,
       image: '',
       loading: true,
       dogName: '',
@@ -69,6 +70,15 @@ class App extends Component {
     })
   }
 
+  // handleFirstLoad() {
+  //   const { firstLoad, loading, localStorage } = this.state;
+  //   if (firstLoad && loading ) {
+  //     this.setState(() => ({ firstLoad: false }))
+  //     return  <img src={ localStorage[0].image } alt="random dog" /> 
+  //   } this.fetchDogs();
+  //   return loading === true ? "Loading..." : <img src={ image } alt="random dog"/> 
+  // }
+
   render() {
     const { image, loading, dogName, } = this.state;
     
@@ -76,7 +86,7 @@ class App extends Component {
       <div className="App">
         <h1>{ dogName }</h1>
        <div className="image-wrapper">
-      { loading === true ? "Loading..." : <img src={image} alt="random dog"/> }
+      { loading === true ? "Loading..." : <img src={ image } alt="random dog"/> }
       </div> 
       <button 
         onClick={ this.handleSearch }
