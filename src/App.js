@@ -10,6 +10,7 @@ class App extends Component {
       loading: true,
       count: 0,
       dogName: '',
+      dogs: [],
     }
 
     this.fetchDogs = this.fetchDogs.bind(this);
@@ -23,7 +24,7 @@ class App extends Component {
       { loading: true },
       () => {fetch(Url)
       .then((response) => response.json())
-      .then(({ message }) => this.setState(({ count }) => ({
+      .then(({ message }) => this.setState(({ count, dogs }) => ({
         image: message,
         loading: false,
         count:  count + 1,
