@@ -71,30 +71,11 @@ class App extends Component {
     const { dogName, image } = this.state;
 
     this.setState((state) => ({
-      dogs: [...state.dogs, ({ dogName, image })]
+      dogs: [...state.dogs, ({ dogName, image })],
     }), () => {
       localStorage.setItem('dogs', JSON.stringify(this.state.dogs));
     })
   }
-
-  // handleFetch() {
-  //   this.fetchDogs();
-  // }
-
-  // handleFirstLoad() {
-  //   const { firstLoad, loading, localStorage } = this.state;
-  //   if (firstLoad && loading ) {
-  //     this.setState(() => ({ firstLoad: false }))
-  //     return  <img src={ localStorage[0].image } alt="random dog" /> 
-  //   } this.fetchDogs();
-  //   return loading === true ? "Loading..." : <img src={ image } alt="random dog"/> 
-  // }
-
-  // 1a condição: firstLoad?
-  // - altera estado image = localStorage
-  // - altera estad estado firstLoad p/ falso
-
-  // 2a condição: { loading === true ? "Loading..." : <img src={ image } alt="random dog"/> }
 
   render() {
     const { image, loading, dogName } = this.state;
@@ -125,7 +106,7 @@ class App extends Component {
             onChange={ this.handlerChanges }
           />
         </label>
-        <label for="submit">
+        <label htmlFor="submit">
         </label>
       </form>
       </div>
