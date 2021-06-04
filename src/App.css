@@ -34,3 +34,12 @@ button {
 input {
   margin-top: 20px;
 }
+
+.saved-dogs {
+  width: 100px;
+  height: 100px;
+}
+
+.saved-list-wrapper {
+  display: flex;
+}

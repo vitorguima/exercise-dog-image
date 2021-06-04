@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import Storagemap from './Storagemap';
 
 class App extends Component {
   constructor(props) {
@@ -10,13 +11,14 @@ class App extends Component {
       loading: true,
       dogName: '',
       dogs: [],
-      localStorage: JSON.parse(localStorage.getItem('dogs')),
+      storage: JSON.parse(localStorage.getItem('dogs')),
     }
 
     this.fetchDogs = this.fetchDogs.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handlerChanges = this.handlerChanges.bind(this);
     this.saveDogToList = this.saveDogToList.bind(this);
+    this.renderSavedList = this.renderSavedList.bind(this);
   }
 
   fetchDogs() {
@@ -42,10 +44,10 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { localStorage } = this.state;
-    if (localStorage) {
+    const { storage } = this.state;
+    if (storage) {
       this.setState(() => ({
-        image: localStorage[localStorage.length - 1].image,
+        image: storage[storage.length - 1].image,
         loading: false,
       }))
     } else {
@@ -68,17 +70,34 @@ class App extends Component {
   }
 
   saveDogToList() {
-    const { dogName, image } = this.state;
+    const { dogName, image, storage } = this.state;
 
     this.setState((state) => ({
       dogs: [...state.dogs, ({ dogName, image })],
+      storage: typeof(storage) === 'array' ? [...state.storage, ({ dogName, image })] : [{ dogName, image }],
     }), () => {
       localStorage.setItem('dogs', JSON.stringify(this.state.dogs));
     })
   }
 
+  renderSavedList(array) {
+
+    if (array) {
+      return ( array.map((dog) => 
+        <>
+          <p>{ dog.dogName } </p>
+          <img 
+            className="saved-dogs" 
+            src={dog.image} 
+          />
+        </> )
+        ) } else {
+          return '';
+        }
+  }
+
   render() {
-    const { image, loading, dogName } = this.state;
+    const { image, loading, dogName, storage } = this.state;
     
     return (
       <div className="App">
@@ -109,6 +128,7 @@ class App extends Component {
         <label htmlFor="submit">
         </label>
       </form>
+      <Storagemap storage={ storage } savedDogs={ this.renderSavedList } />
       </div>
     );
   }
