@@ -6,7 +6,6 @@ class App extends Component {
     super(props)
 
     this.state = {
-      firstLoad: true,
       image: '',
       loading: true,
       dogName: '',
@@ -26,7 +25,7 @@ class App extends Component {
       { loading: true },
       () => {fetch(Url)
       .then((response) => response.json())
-      .then(({ message }) => this.setState(({ count }) => ({
+      .then(({ message }) => this.setState(() => ({
         image: message,
         loading: false,
       })))
@@ -35,7 +34,7 @@ class App extends Component {
   }
 
   shouldComponentUpdate(_nextProps, { image }) {
-    return !image.includes('terrier');
+    return image ? !image.includes('terrier') : true;
   }
 
   handleSearch() {
@@ -43,12 +42,20 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.fetchDogs();
+    const { localStorage } = this.state;
+    if (localStorage) {
+      this.setState(() => ({
+        image: localStorage[localStorage.length - 1].image,
+        loading: false,
+      }))
+    } else {
+      this.fetchDogs();
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.image !== this.state.image) {
-      window.alert(this.state.image.split('/')[4].split('-').join(' '));
+      alert(this.state.image.split('/')[4].split('-').join(' '));
     }
   }
 
@@ -70,6 +77,10 @@ class App extends Component {
     })
   }
 
+  // handleFetch() {
+  //   this.fetchDogs();
+  // }
+
   // handleFirstLoad() {
   //   const { firstLoad, loading, localStorage } = this.state;
   //   if (firstLoad && loading ) {
@@ -79,14 +90,20 @@ class App extends Component {
   //   return loading === true ? "Loading..." : <img src={ image } alt="random dog"/> 
   // }
 
+  // 1a condição: firstLoad?
+  // - altera estado image = localStorage
+  // - altera estad estado firstLoad p/ falso
+
+  // 2a condição: { loading === true ? "Loading..." : <img src={ image } alt="random dog"/> }
+
   render() {
-    const { image, loading, dogName, } = this.state;
+    const { image, loading, dogName } = this.state;
     
     return (
       <div className="App">
         <h1>{ dogName }</h1>
        <div className="image-wrapper">
-      { loading === true ? "Loading..." : <img src={ image } alt="random dog"/> }
+       { loading ? "Loading..." : <img src={ image } alt="random dog"/> }
       </div> 
       <button 
         onClick={ this.handleSearch }
